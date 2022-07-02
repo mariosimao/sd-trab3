@@ -16,6 +16,11 @@ class Message
         static Message release(int processId);
         static Message fromString(std::string message);
         std::string toString();
+        bool isRequest();
+        bool isGrant();
+        bool isRelease();
+        int getProcessId();
+        std::string getTypeName();
 };
 
 #endif
