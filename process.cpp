@@ -1,3 +1,4 @@
+#include <iostream>
 #include <fstream>
 #include <chrono>
 #include <ctime>
@@ -25,10 +26,25 @@ void writeResult(int waitSeconds)
 
 int main(int argc, char const *argv[])
 {
-    Socket client = Socket::client(8080);
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " <k-seconds-to-wait> <r-repetitions>" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  unsigned int kSeconds, rRepetitions;
 
-    Message m1 = Message::request(getpid());
-    Socket::sendMessage(client.getFd(), m1);
+  kSeconds = atoi(argv[1]);
+  rRepetitions = atoi(argv[2]);
+
+  for (unsigned int i = 0; i < rRepetitions; i++) {
+    // send request to write
+    // wait for grant
+    writeResult(kSeconds);
+    // release
+  }
+  Socket client = Socket::client(8080);
+
+  Message m1 = Message::request(getpid());
+  Socket::sendMessage(client.getFd(), m1);
     // writeResult(1);
     // writeResult(1);
     // writeResult(1);
@@ -46,5 +62,6 @@ int main(int argc, char const *argv[])
     // Logger::log(m1);
     // Logger::log(m2);
     // Logger::log(m3);
-}
 
+  return 0;
+}
