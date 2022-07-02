@@ -25,12 +25,21 @@ void writeResult(int waitSeconds)
 
 int main(int argc, char const *argv[])
 {
-    writeResult(1);
-    writeResult(1);
-    writeResult(1);
-    writeResult(1);
-    writeResult(1);
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " <k-seconds-to-wait> <r-repetitions>" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  unsigned int kSeconds, rRepetitions;
 
+  kSeconds = atoi(argv[1]);
+  rRepetitions = atoi(argv[2]);
+
+  for (unsigned int i = 0; i < rRepetitions; i++) {
+    // send request to write
+    // wait for grant
+    writeResult(kSeconds);
+    // release
+  }
     // auto m1 = Message::request(1234);
     // auto m2 = Message::grant(1234);
     // auto m3 = Message::release(1234);
@@ -42,5 +51,6 @@ int main(int argc, char const *argv[])
     // Logger::log(m1);
     // Logger::log(m2);
     // Logger::log(m3);
-}
 
+  return 0;
+}
