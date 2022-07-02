@@ -1,9 +1,10 @@
 #include <vector>
 #include "Message.h"
 
-const int requestId = 1;
-const int grantId = 2;
-const int releaseId = 3;
+const int Message::SIZE = 10;
+const int Message::REQUEST_ID = 1;
+const int Message::GRANT_ID = 2;
+const int Message::RELEASE_ID = 3;
 
 Message::Message(int messageId, int processId)
 {
@@ -13,17 +14,17 @@ Message::Message(int messageId, int processId)
 
 Message Message::request(int processId)
 {
-    return Message(requestId, processId);
+    return Message(Message::REQUEST_ID, processId);
 }
 
 Message Message::grant(int processId)
 {
-    return Message(grantId, processId);
+    return Message(Message::GRANT_ID, processId);
 }
 
 Message Message::release(int processId)
 {
-    return Message(releaseId, processId);
+    return Message(Message::RELEASE_ID, processId);
 }
 
 Message Message::fromString(std::string messageString)
@@ -44,33 +45,33 @@ Message Message::fromString(std::string messageString)
 
 std::string Message::toString()
 {
-    char messageString[this->messageSize];
+    char messageString[Message::SIZE];
     sprintf(messageString, "%d|%d|", this->messageId, this->processId);
 
     std::string processIdString = std::to_string(this->processId);
     int processIdLength = processIdString.length();
-    for (int i = 3 + processIdLength; i < this->messageSize; i++) {
+    for (int i = 3 + processIdLength; i < Message::SIZE; i++) {
         messageString[i] = '0';
     }
 
-    messageString[this->messageSize] = '\0';
+    messageString[Message::SIZE] = '\0';
 
     return messageString;
 }
 
 bool Message::isRequest()
 {
-    return this->messageId == requestId;
+    return this->messageId == Message::REQUEST_ID;
 }
 
 bool Message::isGrant()
 {
-    return this->messageId == grantId;
+    return this->messageId == Message::GRANT_ID;
 }
 
 bool Message::isRelease()
 {
-    return this->messageId == releaseId;
+    return this->messageId == Message::RELEASE_ID;
 }
 
 int Message::getProcessId()
@@ -80,15 +81,15 @@ int Message::getProcessId()
 
 std::string Message::getTypeName()
 {
-    if (this->messageId == requestId) {
+    if (this->messageId == Message::REQUEST_ID) {
         return "REQUEST";
     }
 
-    if (this->messageId == grantId) {
+    if (this->messageId == Message::GRANT_ID) {
         return "GRANT";
     }
 
-    if (this->messageId == releaseId) {
+    if (this->messageId == Message::RELEASE_ID) {
         return "RELEASE";
     }
 

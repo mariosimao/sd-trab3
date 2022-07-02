@@ -6,11 +6,12 @@
 class Message
 {
     private:
-        const int messageSize = 10;
+        static const int REQUEST_ID, GRANT_ID, RELEASE_ID;
         int messageId;
         int processId;
         Message(int messageId, int processId);
     public:
+        static const int SIZE;
         static Message request(int processId);
         static Message grant(int processId);
         static Message release(int processId);
