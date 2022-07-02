@@ -1,8 +1,25 @@
 #include <iostream>
+#include <queue>
 #include <unistd.h>
 #include "Message.h"
 
-using namespace std;
+std::queue<int> queue;
+
+void connection()
+{
+
+}
+
+void mutualExclusion(int processId)
+{
+
+}
+
+void terminal()
+{
+
+}
+
 
 int main(int argc, char const *argv[])
 {

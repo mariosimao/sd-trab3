@@ -1,2 +1,5 @@
-main
+coordinator
+process
+resultado.txt
+message.log
 .vscode

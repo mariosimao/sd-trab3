@@ -4,13 +4,19 @@ CC = g++
 # Wall = enable compiler warnings
 CFLAGS = -Wall
 
-MAIN_INCLUDE = main.cpp Message.cpp
-MAIN_EXECUTABLE = main
+COORDINATOR_INCLUDE = coordinator.cpp Message.cpp
+COORDINATOR_EXECUTABLE = coordinator
 
-all: main
+PROCESS_INCLUDE = process.cpp Time.cpp Message.cpp Logger.cpp
+PROCESS_EXECUTABLE = process
 
-main:
-	$(CC) $(CFLAGS) -o $(MAIN_EXECUTABLE) $(MAIN_INCLUDE)
+all: coordinator process
+
+coordinator:
+	$(CC) $(CFLAGS) -o $(COORDINATOR_EXECUTABLE) $(COORDINATOR_INCLUDE)
+
+process:
+	$(CC) $(CFLAGS) -o $(PROCESS_EXECUTABLE) $(PROCESS_INCLUDE)
 
 clean:
-	$(RM) $(MAIN_EXECUTABLE)
+	$(RM) $(COORDINATOR_EXECUTABLE) $(PROCESS_EXECUTABLE)
