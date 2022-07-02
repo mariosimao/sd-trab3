@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "Message.h"
 #include "Logger.h"
+#include "Socket.h"
 
 void writeResult(int waitSeconds)
 {
@@ -40,6 +41,16 @@ int main(int argc, char const *argv[])
     writeResult(kSeconds);
     // release
   }
+  Socket client = Socket::client(8080);
+
+  Message m1 = Message::request(getpid());
+  Socket::sendMessage(client.getFd(), m1);
+    // writeResult(1);
+    // writeResult(1);
+    // writeResult(1);
+    // writeResult(1);
+    // writeResult(1);
+
     // auto m1 = Message::request(1234);
     // auto m2 = Message::grant(1234);
     // auto m3 = Message::release(1234);

@@ -2,6 +2,7 @@
 #include <queue>
 #include <unistd.h>
 #include "Message.h"
+#include "Socket.h"
 
 
 
@@ -58,5 +59,16 @@ int main(int argc, char const *argv[])
     Message m2 = Message::fromString("2|12345|00");
     std::cout << m2.toString() << std::endl;
 
-    return terminal();
+    // pid_t processId = getpid();
+    // Message message = Message::request(processId);
+    // std::cout << message.toString() << std::endl;
+
+    // Message m2 = Message::fromString("2|12345|00");
+    // std::cout << m2.toString() << std::endl;
+    auto onConnect = [](int newFd) {
+        Message m = Socket::receiveMessage(newFd);
+        std::cout << m.toString() << std::endl;
+    };
+
+    Socket::server(8080, onConnect);
 }
