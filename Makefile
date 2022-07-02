@@ -2,7 +2,7 @@
 CC = g++
 
 # Wall = enable compiler warnings
-CFLAGS = -Wall
+CFLAGS = -Wall -std=c++11
 
 COORDINATOR_INCLUDE = coordinator.cpp Message.cpp Socket.cpp
 COORDINATOR_EXECUTABLE = coordinator
