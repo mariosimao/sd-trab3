@@ -6,8 +6,11 @@
 
 class Logger
 {
+    private:
+        std::string filename;
     public:
-        static void log(Message message);
+        Logger(std::string filename);
+        void log(Message message);
 };
 
 #endif
