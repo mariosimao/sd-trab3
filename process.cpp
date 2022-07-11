@@ -26,6 +26,7 @@ void writeResult(int waitSeconds)
 
 int main(int argc, char const *argv[])
 {
+  try {
   if (argc < 3) {
     std::cerr << "Usage: " << argv[0] << " <k-seconds-to-wait> <r-repetitions>" << std::endl;
     exit(EXIT_FAILURE);
@@ -35,33 +36,28 @@ int main(int argc, char const *argv[])
   kSeconds = atoi(argv[1]);
   rRepetitions = atoi(argv[2]);
 
+  Socket client = Socket::client(8081);
+  int fd = client.getFd();
+  pid_t processId = getpid();
+
   for (unsigned int i = 0; i < rRepetitions; i++) {
-    // send request to write
-    // wait for grant
+    Message request = Message::request(processId);
+    Socket::sendMessage(fd, request);
+
+    Message message;
+    while (Socket::receiveMessage(fd, message)) {
+        if (message.isGrant()) {
+            break;
+        };
+    }
+
     writeResult(kSeconds);
-    // release
+
+    Message release = Message::release(processId);
+    Socket::sendMessage(fd, release);
   }
-  Socket client = Socket::client(8080);
-
-  Message m1 = Message::request(getpid());
-  Socket::sendMessage(client.getFd(), m1);
-    // writeResult(1);
-    // writeResult(1);
-    // writeResult(1);
-    // writeResult(1);
-    // writeResult(1);
-
-    // auto m1 = Message::request(1234);
-    // auto m2 = Message::grant(1234);
-    // auto m3 = Message::release(1234);
-
-    // Logger::log(m1);
-    // sleep(1);
-    // Logger::log(m2);
-    // Logger::log(m3);
-    // Logger::log(m1);
-    // Logger::log(m2);
-    // Logger::log(m3);
-
   return 0;
+  } catch(const char* error) {
+    std::cerr << error << std::endl;
+  }
 }

@@ -3,8 +3,7 @@
 #include <unistd.h>
 #include "Message.h"
 #include "Socket.h"
-
-
+#include "MutualExclusion.h"
 
 using namespace std;
 
@@ -52,23 +51,28 @@ int terminal()
 
 int main(int argc, char const *argv[])
 {
-    pid_t processId = getpid();
-    Message message = Message::request(processId);
-    std::cout << message.toString() << std::endl;
+    Logger logger("message.log");
+    MutualExclusion mutualExclusion(logger);
 
-    Message m2 = Message::fromString("2|12345|00");
-    std::cout << m2.toString() << std::endl;
+    auto onConnect = [&mutualExclusion, &logger](int newFd) {
+        Message m;
+        while (Socket::receiveMessage(newFd, m, logger)) {
+            pid_t processId = m.getProcessId();
 
-    // pid_t processId = getpid();
-    // Message message = Message::request(processId);
-    // std::cout << message.toString() << std::endl;
+            if (m.isRequest()) {
+                mutualExclusion.request(newFd, processId);
+            }
 
-    // Message m2 = Message::fromString("2|12345|00");
-    // std::cout << m2.toString() << std::endl;
-    auto onConnect = [](int newFd) {
-        Message m = Socket::receiveMessage(newFd);
-        std::cout << m.toString() << std::endl;
+            if (m.isRelease()) {
+                mutualExclusion.release(newFd, processId);
+            }
+        }
     };
 
-    Socket::server(8080, onConnect);
+    try {
+        Socket::server(8081, onConnect);
+    } catch(const char* error) {
+        std::cerr << error << std::endl;
+    }
+
 }
