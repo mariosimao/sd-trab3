@@ -8,7 +8,7 @@ COORDINATOR_EXECUTABLE = coordinator
 COORDINATOR_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp)
 
 PROCESS_EXECUTABLE = process
-PROCESS_INCLUDE = $(wildcard ./src/Common/*.cpp)
+PROCESS_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Client/*.cpp)
 
 all: coordinator process
 

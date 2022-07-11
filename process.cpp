@@ -6,6 +6,10 @@
 #include "src/Common/Message.h"
 #include "src/Common/Socket.h"
 
+#include "src/Client/Lock.h"
+
+#define LOCK_PORT 8081
+
 void writeResult(int waitSeconds)
 {
     std::ofstream resultFile;
@@ -24,38 +28,23 @@ void writeResult(int waitSeconds)
 
 int main(int argc, char const *argv[])
 {
-  try {
-  if (argc < 3) {
-    std::cerr << "Usage: " << argv[0] << " <k-seconds-to-wait> <r-repetitions>" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-  unsigned int kSeconds, rRepetitions;
+    unsigned int kSeconds, rRepetitions;
 
-  kSeconds = atoi(argv[1]);
-  rRepetitions = atoi(argv[2]);
-
-  Socket client = Socket::client(8081);
-  int fd = client.getFd();
-  pid_t processId = getpid();
-
-  for (unsigned int i = 0; i < rRepetitions; i++) {
-    Message request = Message::request(processId);
-    Socket::sendMessage(fd, request);
-
-    Message message;
-    while (Socket::receiveMessage(fd, message)) {
-        if (message.isGrant()) {
-            break;
-        };
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " <k-seconds-to-wait> <r-repetitions>" << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    writeResult(kSeconds);
+    kSeconds = atoi(argv[1]);
+    rRepetitions = atoi(argv[2]);
 
-    Message release = Message::release(processId);
-    Socket::sendMessage(fd, release);
-  }
-  return 0;
-  } catch(const char* error) {
-    std::cerr << error << std::endl;
-  }
+    Lock lock(LOCK_PORT);
+
+    for (unsigned int i = 0; i < rRepetitions; i++) {
+        lock.acquire();
+        writeResult(kSeconds);
+        lock.release();
+    }
+
+    return 0;
 }
