@@ -108,17 +108,38 @@ Socket Socket::client(int port)
     return Socket(socketFileDescriptor);
 }
 
-Message Socket::receiveMessage(int fd)
+int Socket::receiveMessage(int fd, Message& message)
 {
-    char buffer[10];
-    recv(fd, buffer, 10, 0);
+    char buffer[Message::SIZE];
 
-    return Message::fromString(buffer);
+    int read = recv(fd, buffer, sizeof(buffer), 0);
+    if (read) {
+        message = Message::fromString(buffer);
+    }
+
+    return read;
+}
+
+int Socket::receiveMessage(int fd, Message& message, Logger& logger)
+{
+    int read = Socket::receiveMessage(fd, message);
+
+    if (read) {
+        logger.log(message);
+    }
+
+    return read;
 }
 
 void Socket::sendMessage(int fd, Message message)
 {
-    send(fd, message.toString().c_str(), 10, 0);
+    send(fd, message.toString().c_str(), message.toString().length(), 0);
+}
+
+void Socket::sendMessage(int fd, Message message, Logger& logger)
+{
+    logger.log(message);
+    Socket::sendMessage(fd, message);
 }
 
 int Socket::getFd()

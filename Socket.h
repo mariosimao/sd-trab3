@@ -2,6 +2,7 @@
 #define SOCKET_H
 
 #include <functional>
+#include "Logger.h"
 #include "Message.h"
 
 class Socket
@@ -12,8 +13,10 @@ class Socket
     public:
         static Socket server(int port, std::function<void(int)> onConnect);
         static Socket client(int serverPort);
-        static Message receiveMessage(int fd);
+        static int receiveMessage(int fd, Message& message);
+        static int receiveMessage(int fd, Message& message, Logger& logger);
         static void sendMessage(int fd, Message message);
+        static void sendMessage(int fd, Message message, Logger& logger);
         int getFd();
 };
 
