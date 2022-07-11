@@ -120,26 +120,9 @@ int Socket::receiveMessage(int fd, Message& message)
     return read;
 }
 
-int Socket::receiveMessage(int fd, Message& message, Logger& logger)
-{
-    int read = Socket::receiveMessage(fd, message);
-
-    if (read) {
-        logger.log(message);
-    }
-
-    return read;
-}
-
 void Socket::sendMessage(int fd, Message message)
 {
     send(fd, message.toString().c_str(), message.toString().length(), 0);
-}
-
-void Socket::sendMessage(int fd, Message message, Logger& logger)
-{
-    logger.log(message);
-    Socket::sendMessage(fd, message);
 }
 
 int Socket::getFd()

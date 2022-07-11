@@ -10,7 +10,10 @@ MutualExclusion::MutualExclusion(Logger& logger): logger(logger)
 void MutualExclusion::request(int fd, int processId)
 {
     if (this->queue.empty()) {
-        Socket::sendMessage(fd, Message::grant(processId), this->logger);
+        Message grant = Message::grant(processId);
+        Socket::sendMessage(fd, grant);
+
+        this->logger.log(grant);
     }
 
     this->queue.push(fd);
@@ -22,6 +25,9 @@ void MutualExclusion::release(int fd, int processId)
     if (!this->queue.empty()) {
         fd = this->queue.front();
 
-        Socket::sendMessage(fd, Message::grant(processId), this->logger);
+        Message grant = Message::grant(processId);
+        Socket::sendMessage(fd, Message::grant(processId));
+
+        this->logger.log(grant);
     }
 }

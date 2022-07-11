@@ -56,15 +56,17 @@ int main(int argc, char const *argv[])
     MutualExclusion mutualExclusion(logger);
 
     auto onConnect = [&mutualExclusion, &logger](int newFd) {
-        Message m;
-        while (Socket::receiveMessage(newFd, m, logger)) {
-            pid_t processId = m.getProcessId();
+        Message message;
+        while (Socket::receiveMessage(newFd, message)) {
+            logger.log(message);
 
-            if (m.isRequest()) {
+            pid_t processId = message.getProcessId();
+
+            if (message.isRequest()) {
                 mutualExclusion.request(newFd, processId);
             }
 
-            if (m.isRelease()) {
+            if (message.isRelease()) {
                 mutualExclusion.release(newFd, processId);
             }
         }
