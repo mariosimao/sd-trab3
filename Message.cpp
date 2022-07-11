@@ -6,23 +6,29 @@ const int Message::REQUEST_ID = 1;
 const int Message::GRANT_ID = 2;
 const int Message::RELEASE_ID = 3;
 
-Message::Message(int messageId, int processId)
+Message::Message()
+{
+    this->messageId = 0;
+    this->processId = 0;
+}
+
+Message::Message(int messageId, pid_t processId)
 {
     this->messageId = messageId;
     this->processId = processId;
 }
 
-Message Message::request(int processId)
+Message Message::request(pid_t processId)
 {
     return Message(Message::REQUEST_ID, processId);
 }
 
-Message Message::grant(int processId)
+Message Message::grant(pid_t processId)
 {
     return Message(Message::GRANT_ID, processId);
 }
 
-Message Message::release(int processId)
+Message Message::release(pid_t processId)
 {
     return Message(Message::RELEASE_ID, processId);
 }
@@ -49,7 +55,7 @@ std::string Message::toString()
     sprintf(messageString, "%d|%d|", this->messageId, this->processId);
 
     std::string processIdString = std::to_string(this->processId);
-    int processIdLength = processIdString.length();
+    pid_t processIdLength = processIdString.length();
     for (int i = 3 + processIdLength; i < Message::SIZE; i++) {
         messageString[i] = '0';
     }
@@ -74,7 +80,7 @@ bool Message::isRelease()
     return this->messageId == Message::RELEASE_ID;
 }
 
-int Message::getProcessId()
+pid_t Message::getProcessId()
 {
     return this->processId;
 }
