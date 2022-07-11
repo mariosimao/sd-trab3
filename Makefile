@@ -4,19 +4,19 @@ CC = g++
 # Wall = enable compiler warnings
 CFLAGS = -Wall -std=c++11 -ggdb
 
-COORDINATOR_INCLUDE = coordinator.cpp Message.cpp Socket.cpp Logger.cpp MutualExclusion.cpp Time.cpp
 COORDINATOR_EXECUTABLE = coordinator
+COORDINATOR_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp)
 
-PROCESS_INCLUDE = process.cpp Time.cpp Message.cpp Socket.cpp Logger.cpp
 PROCESS_EXECUTABLE = process
+PROCESS_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp)
 
 all: coordinator process
 
 coordinator:
-	$(CC) $(CFLAGS) -o $(COORDINATOR_EXECUTABLE) $(COORDINATOR_INCLUDE)
+	$(CC) $(CFLAGS) -o $(COORDINATOR_EXECUTABLE) $(COORDINATOR_EXECUTABLE).cpp $(COORDINATOR_INCLUDE)
 
 process:
-	$(CC) $(CFLAGS) -o $(PROCESS_EXECUTABLE) $(PROCESS_INCLUDE)
+	$(CC) $(CFLAGS) -o $(PROCESS_EXECUTABLE) $(PROCESS_EXECUTABLE).cpp $(PROCESS_INCLUDE)
 
 clean: clean-executables clean-logs free-port
 

@@ -2,8 +2,10 @@
 #define SOCKET_H
 
 #include <functional>
-#include "Logger.h"
+
 #include "Message.h"
+
+#include "../Server/Logger.h"
 
 class Socket
 {

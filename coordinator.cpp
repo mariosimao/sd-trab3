@@ -1,9 +1,10 @@
 #include <iostream>
 #include <queue>
 #include <unistd.h>
-#include "Message.h"
-#include "Socket.h"
-#include "MutualExclusion.h"
+
+#include "./src/Common/Message.h"
+#include "./src/Common/Socket.h"
+#include "./src/Server/MutualExclusion.h"
 
 using namespace std;
 

@@ -2,7 +2,7 @@
 #define LOGGER_H
 
 #include <string>
-#include "Message.h"
+#include "../Common/Message.h"
 
 class Logger
 {

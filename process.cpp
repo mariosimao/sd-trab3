@@ -1,12 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <chrono>
-#include <ctime>
 #include <unistd.h>
-#include "Time.h"
-#include "Message.h"
-#include "Logger.h"
-#include "Socket.h"
+
+#include "src/Common/Time.h"
+#include "src/Common/Message.h"
+#include "src/Common/Socket.h"
 
 void writeResult(int waitSeconds)
 {

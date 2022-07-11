@@ -1,6 +1,7 @@
+#include "../Common/Socket.h"
+#include "../Common/Message.h"
+
 #include "MutualExclusion.h"
-#include "Socket.h"
-#include "Message.h"
 
 MutualExclusion::MutualExclusion(Logger& logger): logger(logger)
 {

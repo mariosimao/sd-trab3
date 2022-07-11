@@ -1,6 +1,7 @@
 #include <fstream>
 
-#include "Time.h"
+#include "../Common/Time.h"
+
 #include "Logger.h"
 
 Logger::Logger(std::string filename)
