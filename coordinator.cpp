@@ -31,7 +31,8 @@ int terminal(CriticalSection &criticalSection)
     }
     else if (command == "report")
     {
-      std::cout << "printing report..." << std::endl;
+      std::cout << "printing report... \n" << std::endl;
+      criticalSection.printReport();
     }
     else if (command == "exit")
     {
