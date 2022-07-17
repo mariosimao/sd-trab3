@@ -18,8 +18,9 @@ class MutualExclusion
     public:
         MutualExclusion(Logger &logger);
         void request(int fd, int processId);
-        void release(int fd, int processId);
-        // std::queue<QueueItem> getQueue();
+        void release();
+        //std::queue<QueueItem> getQueue();
+        void printQueue();
 };
 
 #endif

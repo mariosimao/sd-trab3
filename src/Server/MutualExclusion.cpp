@@ -25,14 +25,15 @@ void MutualExclusion::request(int fd, int processId)
     this->queue.push(item);
 }
 
-void MutualExclusion::release(int fd, int processId)
+void MutualExclusion::release()
 {
     this->queue.pop();
     if (!this->queue.empty()) {
-        fd = this->queue.front().fd;
+        int fd = this->queue.front().fd;
+        int processId = this->queue.front().processId;
 
         Message grant = Message::grant(processId);
-        Socket::sendMessage(fd, Message::grant(processId));
+        Socket::sendMessage(fd, grant);
 
         this->logger.log(grant);
     }
@@ -43,14 +44,14 @@ void MutualExclusion::release(int fd, int processId)
 //   return this->queue;
 // }
 
-// void print_queue()
-// {
-//   std::queue<QueueItem> queueToPrint;
-//   while (!queueToPrint.empty())
-//   {
-//     int itemFd = queueToPrint.front().fd;
-//     std::cout << itemFd << " ";
-//     queueToPrint.pop();
-//   }
-//   std::cout << std::endl;
-// }
+void MutualExclusion::printQueue()
+{
+  std::queue<QueueItem> queueToPrint = this->queue;
+   while (!queueToPrint.empty())
+  {
+    int itemFd = queueToPrint.front().processId;
+    std::cout << itemFd << " ";
+    queueToPrint.pop();
+  }
+  std::cout << std::endl;
+}

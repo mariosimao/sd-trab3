@@ -21,7 +21,7 @@ void mutualExclusion(int processId)
 
 }
 
-int terminal()
+int terminal(MutualExclusion mutualExclusion)
 {
   // print queue
   // print count of proccess allowed in rc, group by proccess id
@@ -34,6 +34,8 @@ int terminal()
     getline(cin, command);
     if (command == "queue") {
       cout << "printing queue..." << endl;
+      mutualExclusion.printQueue();
+      // cout << "printing queue..." << endl;
     }
     else if (command == "report")
     {
@@ -50,9 +52,8 @@ int terminal()
   }
 }
 
-void receiveConnections() {
-  Logger logger("message.log");
-  MutualExclusion mutualExclusion(logger);
+void receiveConnections(MutualExclusion mutualExclusion, Logger logger)
+{
 
   auto onConnect = [&mutualExclusion, &logger](int newFd)
   {
@@ -70,7 +71,7 @@ void receiveConnections() {
 
       if (message.isRelease())
       {
-        mutualExclusion.release(newFd, processId);
+        mutualExclusion.release();
       }
     }
     close(newFd);
@@ -86,11 +87,12 @@ void receiveConnections() {
   }
 }
 
-
 int main(int argc, char const *argv[])
 {
-  std::thread interface (terminal);
-  std::thread connections (receiveConnections);
+  Logger logger("message.log");
+  MutualExclusion mutualExclusion(logger);
+  std::thread interface(terminal, std::ref(mutualExclusion));
+  std::thread connections(receiveConnections, std::ref(mutualExclusion), std::ref(logger));
 
   interface.join();
   connections.join();

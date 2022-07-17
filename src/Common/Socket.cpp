@@ -44,12 +44,7 @@ Socket Socket::server(int port, std::function<void(int)> onConnect)
         throw strerror(errno);
     }
 
-    /**
-     * Prepare to accept connections
-     *
-     * 5 = pending connections queue maximum size
-     */
-    int listenResult = listen(socketFileDescriptor, 5);
+    int listenResult = listen(socketFileDescriptor, 1000);
     if (listenResult == -1) {
         throw strerror(errno);
     }
