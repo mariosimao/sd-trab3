@@ -4,12 +4,12 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <thread>
 #include "Socket.h"
 
 Socket::Socket(int fd)
 {
-    this->fd = fd;
+    this->fd = fd; // file descriptor
 }
 
 Socket Socket::server(int port, std::function<void(int)> onConnect)
@@ -64,9 +64,8 @@ Socket Socket::server(int port, std::function<void(int)> onConnect)
             &clientAddressLength
         );
 
-        onConnect(newSocketFileDescriptor);
-
-        close(newSocketFileDescriptor);
+        std::thread t (std::ref(onConnect), std::ref(newSocketFileDescriptor));
+        t.detach();
     }
 
     close(socketFileDescriptor);
