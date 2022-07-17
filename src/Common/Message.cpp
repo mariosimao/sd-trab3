@@ -51,7 +51,7 @@ Message Message::fromString(std::string messageString)
 
 std::string Message::toString()
 {
-    char messageString[Message::SIZE];
+    char messageString[Message::SIZE+1];
     sprintf(messageString, "%d|%d|", this->messageId, this->processId);
 
     std::string processIdString = std::to_string(this->processId);
