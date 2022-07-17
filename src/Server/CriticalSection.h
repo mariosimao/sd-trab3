@@ -1,10 +1,10 @@
-#ifndef MUTUAL_EXCLUSION_H
-#define MUTUAL_EXCLUSION_H
+#ifndef CRITICAL_SECTION_H
+#define CRITICAL_SECTION_H
 
 #include <queue>
 #include "Logger.h"
 
-class MutualExclusion
+class CriticalSection
 {
     struct QueueItem
     {
@@ -13,13 +13,12 @@ class MutualExclusion
     };
 
     private:
-        std::queue<QueueItem> queue;
+        std::deque<QueueItem> queue;
         Logger &logger;
     public:
-        MutualExclusion(Logger &logger);
+        CriticalSection(Logger &logger);
         void request(int fd, int processId);
         void release();
-        //std::queue<QueueItem> getQueue();
         void printQueue();
 };
 

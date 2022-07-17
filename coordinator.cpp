@@ -2,44 +2,36 @@
 #include <queue>
 #include <unistd.h>
 #include <thread>
+#include <mutex>
 
 #include "./src/Common/Message.h"
 #include "./src/Common/Socket.h"
-#include "./src/Server/MutualExclusion.h"
-
-using namespace std;
-
-std::queue<int> queue;
+#include "./src/Server/CriticalSection.h"
 
 void connection()
 {
 
 }
 
-void mutualExclusion(int processId)
+void criticalSection(int processId)
 {
 
 }
 
-int terminal(MutualExclusion mutualExclusion)
+int terminal(CriticalSection &criticalSection)
 {
-  // print queue
-  // print count of proccess allowed in rc, group by proccess id
-  // end process
-
-  string command;
+  std::string command;
 
   while(true) {
-    cout << "Please enter an valid command: 'queue', 'report' or 'exit'" << endl;
-    getline(cin, command);
+    std::cout << "Please enter an valid command: 'queue', 'report' or 'exit'" << std::endl;
+    getline(std::cin, command);
     if (command == "queue") {
-      cout << "printing queue..." << endl;
-      mutualExclusion.printQueue();
-      // cout << "printing queue..." << endl;
+      std::cout << "printing queue..." << std::endl;
+      criticalSection.printQueue();
     }
     else if (command == "report")
     {
-      cout << "printing report..." << endl;
+      std::cout << "printing report..." << std::endl;
     }
     else if (command == "exit")
     {
@@ -47,15 +39,14 @@ int terminal(MutualExclusion mutualExclusion)
     }
     else
     {
-      cerr << "Invalid command type. Use 'queue', 'report' or 'exit'." << endl;
+      std::cerr << "Invalid command type. Use 'queue', 'report' or 'exit'." << std::endl;
     }
   }
 }
 
-void receiveConnections(MutualExclusion mutualExclusion, Logger logger)
+void receiveConnections(CriticalSection &criticalSection, Logger &logger)
 {
-
-  auto onConnect = [&mutualExclusion, &logger](int newFd)
+  auto onConnect = [&criticalSection, &logger](int newFd)
   {
     Message message;
     while (Socket::receiveMessage(newFd, message))
@@ -66,12 +57,12 @@ void receiveConnections(MutualExclusion mutualExclusion, Logger logger)
 
       if (message.isRequest())
       {
-        mutualExclusion.request(newFd, processId);
+        criticalSection.request(newFd, processId);
       }
 
       if (message.isRelease())
       {
-        mutualExclusion.release();
+        criticalSection.release();
       }
     }
     close(newFd);
@@ -90,9 +81,10 @@ void receiveConnections(MutualExclusion mutualExclusion, Logger logger)
 int main(int argc, char const *argv[])
 {
   Logger logger("message.log");
-  MutualExclusion mutualExclusion(logger);
-  std::thread interface(terminal, std::ref(mutualExclusion));
-  std::thread connections(receiveConnections, std::ref(mutualExclusion), std::ref(logger));
+  CriticalSection criticalSection(logger);
+
+  std::thread interface(terminal, std::ref(criticalSection));
+  std::thread connections(receiveConnections, std::ref(criticalSection), std::ref(logger));
 
   interface.join();
   connections.join();

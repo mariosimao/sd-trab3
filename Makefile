@@ -5,10 +5,10 @@ CC = g++
 CFLAGS = -Wall -std=c++11 -ggdb
 
 COORDINATOR_EXECUTABLE = coordinator
-COORDINATOR_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp)
+COORDINATOR_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp) -lpthread
 
 PROCESS_EXECUTABLE = process
-PROCESS_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Client/*.cpp)
+PROCESS_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Client/*.cpp) -lpthread
 
 all: coordinator process
 
