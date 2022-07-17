@@ -6,13 +6,20 @@
 
 class MutualExclusion
 {
+    struct QueueItem
+    {
+        int processId;
+        int fd;
+    };
+
     private:
-        std::queue<int> queue;
-        Logger& logger;
+        std::queue<QueueItem> queue;
+        Logger &logger;
     public:
-        MutualExclusion(Logger& logger);
+        MutualExclusion(Logger &logger);
         void request(int fd, int processId);
         void release(int fd, int processId);
+        // std::queue<QueueItem> getQueue();
 };
 
 #endif
