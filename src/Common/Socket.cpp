@@ -59,7 +59,7 @@ Socket Socket::server(int port, std::function<void(int)> onConnect)
             &clientAddressLength
         );
 
-        std::thread t(std::ref(onConnect), std::ref(newSocketFileDescriptor));
+        std::thread t(onConnect, newSocketFileDescriptor);
         t.detach();
     }
 

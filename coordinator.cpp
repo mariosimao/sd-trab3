@@ -66,7 +66,6 @@ void receiveConnections(CriticalSection &criticalSection, Logger &logger)
         criticalSection.release();
       }
     }
-    close(newFd);
   };
 
   try
