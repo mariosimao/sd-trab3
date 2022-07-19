@@ -7,7 +7,7 @@
 
 #include "CriticalSection.h"
 
-std::mutex mutex;
+std::mutex queueMutex, reportMutex;
 
 CriticalSection::CriticalSection(Logger& logger): logger(logger)
 {
@@ -15,7 +15,8 @@ CriticalSection::CriticalSection(Logger& logger): logger(logger)
 
 void CriticalSection::request(int fd, int processId)
 {
-    mutex.lock();
+    queueMutex.lock();
+
     if (this->queue.empty()) {
         Message grant = Message::grant(processId);
         Socket::sendMessage(fd, grant);
@@ -23,15 +24,16 @@ void CriticalSection::request(int fd, int processId)
         this->logger.log(grant);
     }
 
-    QueueItem item = {processId,fd};
-
+    QueueItem item = { processId, fd};
     this->queue.push_back(item);
-    mutex.unlock();
+
+    queueMutex.unlock();
 }
 
 void CriticalSection::release()
 {
-    mutex.lock();
+    queueMutex.lock();
+
     this->queue.pop_front();
     if (!this->queue.empty()) {
         int fd = this->queue.front().fd;
@@ -42,12 +44,13 @@ void CriticalSection::release()
         addToReport(processId);
         this->logger.log(grant);
     }
-    mutex.unlock();
+
+    queueMutex.unlock();
 }
 
 void CriticalSection::printQueue()
 {
-    mutex.lock();
+    queueMutex.lock();
     size_t size = this->queue.size();
     std::cout << "Size: " << size << " | Items: ";
 
@@ -56,19 +59,20 @@ void CriticalSection::printQueue()
         std::cout << item.processId << " ";
     }
     std::cout << std::endl;
-    mutex.unlock();
+    queueMutex.unlock();
 }
 
 void CriticalSection::addToReport(int processId)
 {
-  if (this->report.find(processId) == this->report.end())
-  {
-    this->report[processId] = 1;
-  }
-  else
-  {
-    this->report[processId]++;
-  }
+    reportMutex.lock();
+
+    if (this->report.find(processId) == this->report.end()) {
+        this->report[processId] = 1;
+    } else {
+        this->report[processId]++;
+    }
+
+    reportMutex.unlock();
 }
 
 void CriticalSection::printReport()
