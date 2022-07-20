@@ -10,7 +10,7 @@
 
 #define LOCK_PORT 8081
 
-void writeResult(int waitSeconds)
+void writeResult()
 {
     std::ofstream resultFile;
     resultFile.open("resultado.txt", std::ios_base::app);
@@ -20,8 +20,6 @@ void writeResult(int waitSeconds)
 
     resultFile << date << "\t" << processId << "\n";
     resultFile.close();
-
-    sleep(waitSeconds);
 
     return;
 }
@@ -42,7 +40,10 @@ int main(int argc, char const *argv[])
 
     for (unsigned int i = 0; i < rRepetitions; i++) {
         lock.acquire();
-        writeResult(kSeconds);
+
+        writeResult();
+        sleep(kSeconds);
+
         lock.release();
     }
 
