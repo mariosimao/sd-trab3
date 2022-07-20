@@ -88,9 +88,10 @@ void CriticalSection::printReport()
   std::cout << std::setfill('*') << std::setw(2 * colWidth) << "*" << std::endl;
 
   // create table data
-  std::map<int, int>::iterator it;
-  for (it = this->report.begin(); it != this->report.end(); ++it)
+  reportMutex.lock();
+  for (auto it = this->report.begin(); it != this->report.end(); ++it)
   {
     std::cout << std::setfill(' ') << std::setw(colWidth) << it->first << std::setw(colWidth) << it->second << std::endl;
   }
+  reportMutex.unlock();
 }

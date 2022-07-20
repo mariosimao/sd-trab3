@@ -25,7 +25,7 @@ int terminal(CriticalSection &criticalSection)
             std::cout << "printing report... \n" << std::endl;
             criticalSection.printReport();
         } else if (command == "exit") {
-            return 0;
+            exit(EXIT_SUCCESS);
         } else {
             std::cerr << "Invalid command type. Use 'queue', 'report' or 'exit'." << std::endl;
         }
