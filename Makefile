@@ -2,7 +2,7 @@
 CC = g++
 
 # Wall = enable compiler warnings
-CFLAGS = -Wall -std=c++11 -ggdb
+CFLAGS = -Wall -std=c++11
 
 COORDINATOR_EXECUTABLE = coordinator
 COORDINATOR_INCLUDE = $(wildcard ./src/Common/*.cpp) $(wildcard ./src/Server/*.cpp) -lpthread
