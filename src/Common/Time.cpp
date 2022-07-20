@@ -17,7 +17,7 @@ std::string Time::now()
     std::chrono::seconds::rep milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(tse).count() % 1000;
 
     buffer << (1900 + localTime.tm_year) << '-'
-        << std::setfill('0') << std::setw(2) << (localTime.tm_mon << 1) << '-'
+        << std::setfill('0') << std::setw(2) << (localTime.tm_mon + 1) << '-'
         << std::setfill('0') << std::setw(2) << localTime.tm_mday << ' '
         << std::setfill('0') << std::setw(2) << localTime.tm_hour << ':'
         << std::setfill('0') << std::setw(2) << localTime.tm_min << ':'
