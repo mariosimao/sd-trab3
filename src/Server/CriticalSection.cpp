@@ -20,8 +20,9 @@ void CriticalSection::request(int fd, int processId)
     if (this->queue.empty()) {
         Message grant = Message::grant(processId);
         Socket::sendMessage(fd, grant);
-        addToReport(processId);
         this->logger.log(grant);
+
+        addToReport(processId);
     }
 
     QueueItem item = { processId, fd};
@@ -41,8 +42,9 @@ void CriticalSection::release()
 
         Message grant = Message::grant(processId);
         Socket::sendMessage(fd, grant);
-        addToReport(processId);
         this->logger.log(grant);
+
+        addToReport(processId);
     }
 
     queueMutex.unlock();
