@@ -79,19 +79,18 @@ void CriticalSection::addToReport(int processId)
 
 void CriticalSection::printReport()
 {
-  int colWidth = 15;
+    int colWidth = 15;
 
-  // table header
-  std::cout << std::setfill('*') << std::setw(2 * colWidth) << "*" << std::endl;
-  std::cout << std::setfill(' ') << std::fixed;
-  std::cout << std::setw(colWidth) << "ProcessId" << std::setw(colWidth) << "access count" << std::endl;
-  std::cout << std::setfill('*') << std::setw(2 * colWidth) << "*" << std::endl;
+    // table header
+    std::cout << std::setfill('*') << std::setw(2 * colWidth) << "*" << std::endl;
+    std::cout << std::setfill(' ') << std::fixed;
+    std::cout << std::setw(colWidth) << "ProcessId" << std::setw(colWidth) << "access count" << std::endl;
+    std::cout << std::setfill('*') << std::setw(2 * colWidth) << "*" << std::endl;
 
-  // create table data
-  reportMutex.lock();
-  for (auto it = this->report.begin(); it != this->report.end(); ++it)
-  {
-    std::cout << std::setfill(' ') << std::setw(colWidth) << it->first << std::setw(colWidth) << it->second << std::endl;
-  }
-  reportMutex.unlock();
+    // create table data
+    reportMutex.lock();
+    for (auto it = this->report.begin(); it != this->report.end(); ++it) {
+        std::cout << std::setfill(' ') << std::setw(colWidth) << it->first << std::setw(colWidth) << it->second << std::endl;
+    }
+    reportMutex.unlock();
 }
